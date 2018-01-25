@@ -32,6 +32,18 @@ public class PartyPlannerTest {
     }
 
     /*
+     * When customers list is empty no exception should be thrown and customers
+     * invited list should be empty
+     */
+    @Test
+    public void testFileEmptyContent() throws Exception {
+        PartyPlanner planner = new PartyPlanner(new File(TEST_PATH + "customers_empty.json"));
+        List<Customer> customers = planner.getInvitedCustomers();
+
+        assertEquals(customers.size(), 0);
+    }
+
+    /*
      * Inside the file there's one record containing a location within 100km
      * from the dublin office this location will be contained in the invited
      * customers list
@@ -55,7 +67,7 @@ public class PartyPlannerTest {
 
         assertEquals(customers.size(), 0);
     }
-    
+
     /*
      * Testing a location with coordinates equal to the Dublin office location
      */
@@ -63,8 +75,26 @@ public class PartyPlannerTest {
     public void testInOfficeCustomers() throws Exception {
         PartyPlanner planner = new PartyPlanner(new File(TEST_PATH + "customers_inoffice.json"));
         List<Customer> customers = planner.getInvitedCustomers();
-        
+
         assertEquals(customers.get(0).getUserId(), 1);
+    }
+
+    /*
+     * The customers file contains two records with user id in descending order
+     * both within 100km of distance from the office. The Algorithm should
+     * return a list with the two customers in ascending order
+     */
+    @Test
+    public void testAscendingOrderList() throws Exception {
+        int[] userIds = { 2, 34 };
+        int arrayIndex = 0;
+
+        PartyPlanner planner = new PartyPlanner(new File(TEST_PATH + "customers_desc.json"));
+        List<Customer> customers = planner.getInvitedCustomers();
+
+        for (Customer customer : customers) {
+            assertEquals(customer.getUserId(), userIds[arrayIndex++]);
+        }
     }
 
 }
