@@ -4,6 +4,7 @@ public class Customer implements Comparable<Customer> {
     private int userId;
     private String name;
     private double latitude;
+    private double longitude;
 
     public Customer(int userId, String name, double latitude, double longitude) {
         this.userId = userId;
@@ -43,8 +44,6 @@ public class Customer implements Comparable<Customer> {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
-
-    private double longitude;
 
     public int compareTo(Customer o) {
         if (this.getUserId() > o.getUserId()) {
