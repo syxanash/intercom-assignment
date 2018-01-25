@@ -21,7 +21,7 @@ public class App {
                 System.out.println(customer.getUserId() + " " + customer.getName());
             }
         } catch (InputFormatException e) {
-            System.err.println(e.getMessage());
+            System.err.println("Error reading the file content:\n\t" + e.getMessage());
             System.exit(1);
         } catch (FileNotFoundException e) {
             System.err.println("Please provide an existing json file containing the customers!");
