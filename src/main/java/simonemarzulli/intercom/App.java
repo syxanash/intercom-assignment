@@ -3,6 +3,7 @@ package simonemarzulli.intercom;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -14,13 +15,16 @@ import simonemarzulli.intercom.bean.Office;
 public class App {
 
     private static final String FILE_NAME = "customers.json";
+    
+    // each degree on a great circle of Earth is 110.57 kilometers
+    private static final double DEGREE_CIRCLE_EARTH = 110.57;
 
     public static void main(String[] args) throws IOException {
 
         File file = new File(FILE_NAME);
         Scanner sc = null;
 
-        List<Customer> customers = new ArrayList<Customer>();
+        List<Customer> allCustomers = new ArrayList<Customer>();
         Office dublinOffice = new Office("Dublin", 53.339428, -6.257664);
 
         try {
@@ -38,14 +42,16 @@ public class App {
 
                 int tempUserId = obj.getInt("user_id");
 
-                customers.add(new Customer(tempUserId, tempName, tempLatitude, tempLongitude));
+                allCustomers.add(new Customer(tempUserId, tempName, tempLatitude, tempLongitude));
             }
         } finally {
             if (sc != null)
                 sc.close();
         }
+        
+        List<Customer> invitedCustomers = new ArrayList<Customer>();
 
-        for (Customer customer : customers) {
+        for (Customer customer : allCustomers) {
             // great circle distance in radians
 
             double custLat = Math.toRadians(customer.getLatitude());
@@ -59,10 +65,22 @@ public class App {
             // convert back to degrees
             angle = Math.toDegrees(angle);
 
-            // each degree on a great circle of Earth is 110.57 kilometers
-            double distance = (110.57 * angle);
+            double distance = (DEGREE_CIRCLE_EARTH * angle);
 
-            System.out.println(distance + " in km");
+            System.out.println(customer.getUserId() + " " + distance + " in km");
+            
+            if (distance <= 100.0) {
+                invitedCustomers.add(customer);
+            }
         }
+        
+        System.out.println("customers coming");
+        
+        Collections.sort(invitedCustomers);
+        
+        for (Customer customer : invitedCustomers) {
+            System.out.println(customer.getUserId());
+        }
+        
     }
 }
