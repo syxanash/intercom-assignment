@@ -7,7 +7,6 @@ public class Office {
     private double longitude;
 
     public Office(String name, double latitude, double longitude) {
-        super();
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
