@@ -12,7 +12,7 @@ public class App {
 
     public static void main(String[] args) {
         try {
-            PartyPlanner planner = new PartyPlanner(new File(FILE_NAME));
+            PartyPlanner planner = new PartyPlanner(new File(FILE_NAME), 100.0, 53.339428, -6.257664);
 
             for (Customer customer : planner.getInvitedCustomers()) {
                 System.out.println(customer.getUserId() + "\t" + customer.getName());

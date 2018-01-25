@@ -12,6 +12,9 @@ import simonemarzulli.intercom.exceptions.InputFormatException;
 
 public class PartyPlannerTest {
     private static final String TEST_PATH = "testcases/";
+    private static final double MIN_DISTANCE = 100.0;
+    private static final double DUB_OFFICE_LAT = 53.339428;
+    private static final double DUB_OFFICE_LON = -6.257664;
 
     /*
      * This unit test is used to verify that giving a bad file name a
@@ -19,7 +22,7 @@ public class PartyPlannerTest {
      */
     @Test(expected = java.io.FileNotFoundException.class)
     public void testWrongFilename() throws Exception {
-        new PartyPlanner(new File("test.json"));
+        new PartyPlanner(new File("test.json"), MIN_DISTANCE, DUB_OFFICE_LAT, DUB_OFFICE_LON);
     }
 
     /*
@@ -28,7 +31,7 @@ public class PartyPlannerTest {
      */
     @Test(expected = InputFormatException.class)
     public void testBadFileContent() throws Exception {
-        new PartyPlanner(new File(TEST_PATH + "customers.json"));
+        new PartyPlanner(new File(TEST_PATH + "customers.json"), MIN_DISTANCE, DUB_OFFICE_LAT, DUB_OFFICE_LON);
     }
 
     /*
@@ -37,7 +40,8 @@ public class PartyPlannerTest {
      */
     @Test
     public void testFileEmptyContent() throws Exception {
-        PartyPlanner planner = new PartyPlanner(new File(TEST_PATH + "customers_empty.json"));
+        PartyPlanner planner = new PartyPlanner(new File(TEST_PATH + "customers_empty.json"), MIN_DISTANCE,
+                DUB_OFFICE_LAT, DUB_OFFICE_LON);
         List<Customer> customers = planner.getInvitedCustomers();
 
         assertEquals(customers.size(), 0);
@@ -50,7 +54,8 @@ public class PartyPlannerTest {
      */
     @Test
     public void testInRange() throws Exception {
-        PartyPlanner planner = new PartyPlanner(new File(TEST_PATH + "customers_in.json"));
+        PartyPlanner planner = new PartyPlanner(new File(TEST_PATH + "customers_in.json"), MIN_DISTANCE, DUB_OFFICE_LAT,
+                DUB_OFFICE_LON);
         List<Customer> customers = planner.getInvitedCustomers();
 
         assertEquals(customers.get(0).getUserId(), 1);
@@ -62,7 +67,8 @@ public class PartyPlannerTest {
      */
     @Test
     public void testOutOfRange() throws Exception {
-        PartyPlanner planner = new PartyPlanner(new File(TEST_PATH + "customers_out.json"));
+        PartyPlanner planner = new PartyPlanner(new File(TEST_PATH + "customers_out.json"), MIN_DISTANCE,
+                DUB_OFFICE_LAT, DUB_OFFICE_LON);
         List<Customer> customers = planner.getInvitedCustomers();
 
         assertEquals(customers.size(), 0);
@@ -73,7 +79,8 @@ public class PartyPlannerTest {
      */
     @Test
     public void testInOfficeCustomers() throws Exception {
-        PartyPlanner planner = new PartyPlanner(new File(TEST_PATH + "customers_inoffice.json"));
+        PartyPlanner planner = new PartyPlanner(new File(TEST_PATH + "customers_inoffice.json"), MIN_DISTANCE,
+                DUB_OFFICE_LAT, DUB_OFFICE_LON);
         List<Customer> customers = planner.getInvitedCustomers();
 
         assertEquals(customers.get(0).getUserId(), 1);
@@ -89,7 +96,8 @@ public class PartyPlannerTest {
         int[] userIds = { 2, 34 };
         int arrayIndex = 0;
 
-        PartyPlanner planner = new PartyPlanner(new File(TEST_PATH + "customers_desc.json"));
+        PartyPlanner planner = new PartyPlanner(new File(TEST_PATH + "customers_desc.json"), MIN_DISTANCE,
+                DUB_OFFICE_LAT, DUB_OFFICE_LON);
         List<Customer> customers = planner.getInvitedCustomers();
 
         for (Customer customer : customers) {

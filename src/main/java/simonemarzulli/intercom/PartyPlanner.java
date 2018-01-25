@@ -11,12 +11,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import simonemarzulli.intercom.bean.Customer;
-import simonemarzulli.intercom.bean.Office;
 import simonemarzulli.intercom.exceptions.InputFormatException;
 
 /**
  * Class used for reading the list of customers from a JSON file and returning
- * the list of customers within 100km which will be invited to the party.
+ * the list of customers within "n" kilometers which will be invited to the
+ * party.
  * 
  * @author Simone
  *
@@ -24,8 +24,9 @@ import simonemarzulli.intercom.exceptions.InputFormatException;
 public class PartyPlanner {
     private List<Customer> allCustomers;
 
-    private static final double MIN_DISTANCE = 100.0;
-    private static final Office DUBLIN_OFFICE = new Office("Dublin", 53.339428, -6.257664);
+    private final double minDistance;
+    private final double officeLatitude;
+    private final double officeLongitude;
 
     // each degree on a great circle of Earth is 110.57 kilometers
     private static final double DEGREE_CIRCLE_EARTH = 110.57;
@@ -39,10 +40,15 @@ public class PartyPlanner {
      * @throws FileNotFoundException
      * @throws InputFormatException
      */
-    public PartyPlanner(File filename) throws FileNotFoundException, InputFormatException {
+    public PartyPlanner(File filename, double minDistance, double officeLatitude, double officeLongitude)
+            throws FileNotFoundException, InputFormatException {
         Scanner sc = null;
 
         allCustomers = new ArrayList<Customer>();
+
+        this.minDistance = minDistance;
+        this.officeLatitude = officeLatitude;
+        this.officeLongitude = officeLongitude;
 
         try {
             sc = new Scanner(filename);
@@ -110,23 +116,25 @@ public class PartyPlanner {
     }
 
     /**
-     * Method which checks for every customer in list, the ones within 100 km of
-     * distance from the Dublin office and returns them in a list of customers.
+     * Method which checks for every customer in list, the ones within n
+     * kilometers of distance from the office and returns them in a list of
+     * customers.
      * 
-     * @return a list of customers within 100 km from the dublin office
+     * @return a list of customers within a certain distance in kilometers from
+     *         the office
      */
 
     public List<Customer> getInvitedCustomers() {
         List<Customer> invitedCustomers = new ArrayList<Customer>();
 
         // for each customer get the great circle distance in kilometers and
-        // save only the customers within 100 kilometers of distance form the
+        // save only the customers within "n" kilometers of distance form the
         // office
         for (Customer customer : allCustomers) {
-            double distance = getGreatCircleDistance(customer.getLatitude(), customer.getLongitude(),
-                    DUBLIN_OFFICE.getLatitude(), DUBLIN_OFFICE.getLongitude());
+            double distance = getGreatCircleDistance(customer.getLatitude(), customer.getLongitude(), officeLatitude,
+                    officeLongitude);
 
-            if (distance <= MIN_DISTANCE) {
+            if (distance <= minDistance) {
                 invitedCustomers.add(customer);
             }
         }
