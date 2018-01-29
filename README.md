@@ -1,6 +1,6 @@
 # Intercom code test
 
-A code challenge sent by Intercom for the hiring process.
+A code challenge sent by Intercom for the hiring process. As mentioned by Intercom, the solution could be shared on platforms such as GitHub so I've decided show my idea of how to solve this problem.
 
 ## Specification
 
